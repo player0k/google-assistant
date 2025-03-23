@@ -1,5 +1,6 @@
 import os
 import json
+import time
 from google.assistant.library import Assistant
 from google.assistant.library.event import EventType
 from google.oauth2.credentials import Credentials
@@ -32,9 +33,19 @@ def start_assistant():
         credentials.refresh(Request())
     
     # Запуск ассистента с device_model_id
+    last_check = time.time()
     with Assistant(credentials, device_model_id=DEVICE_MODEL_ID) as assistant:
         for event in assistant.start():
+            current_time = time.time()
+            if current_time - last_check > 60:
+                if credentials.expired and credentials.refresh_token:
+                    print("Refreshing token...")
+                    credentials.refresh(Request())
+                    with open(CREDENTIALS_PATH, 'w') as f:
+                        f.write(credentials.to_json())
+                last_check = current_time
             process_event(event)
+
 
 if __name__ == '__main__':
     start_assistant()

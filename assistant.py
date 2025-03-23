@@ -15,6 +15,9 @@ DEVICE_MODEL_ID = 'your_device_model_id'
 def process_event(event):
     if event.type == EventType.ON_CONVERSATION_TURN_STARTED:
         print("Начало разговора")
+    elif event.type == EventType.ON_RECOGNIZING_SPEECH_FINISHED:
+        if event.args and 'text' in event.args:
+            print("Распознанная речь:", event.args['text'])
     elif event.type == EventType.ON_CONVERSATION_TURN_FINISHED:
         print("Разговор завершён")
 

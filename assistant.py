@@ -1,6 +1,7 @@
 import os
 import json
 import time
+import requests  # Добавляем библиотеку для HTTP-запросов
 from google.assistant.library import Assistant
 from google.assistant.library.event import EventType
 from google.oauth2.credentials import Credentials
@@ -10,8 +11,8 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # Путь к файлу с учетными данными OAuth 2.0
 CREDENTIALS_PATH = os.path.expanduser('~/.config/google-oauthlib-tool/credentials.json')
-# Замените 'your_device_model_id' на ваш реальный идентификатор модели устройства
 DEVICE_MODEL_ID = 'your_device_model_id'
+NODE_RED_URL = 'http://localhost:1880/assistant'  # URL для отправки данных в Node-RED
 
 def process_event(event):
     if event.type == EventType.ON_CONVERSATION_TURN_STARTED:
@@ -19,20 +20,23 @@ def process_event(event):
     elif event.type == EventType.ON_RECOGNIZING_SPEECH_FINISHED:
         if event.args and 'text' in event.args:
             print("Распознанная речь:", event.args['text'])
+            # Отправляем распознанную команду в Node-RED
+            try:
+                requests.post(NODE_RED_URL, json={'command': event.args['text']})
+                print("Команда отправлена в Node-RED")
+            except Exception as e:
+                print(f"Ошибка отправки в Node-RED: {e}")
     elif event.type == EventType.ON_CONVERSATION_TURN_FINISHED:
         print("Разговор завершён")
 
 def start_assistant():
-    # Загрузка учетных данных
     with open(CREDENTIALS_PATH, 'r') as f:
         credentials = Credentials(token=None, **json.load(f))
     
-    # Если токен просрочен и есть refresh token, обновляем его
     if credentials.expired and credentials.refresh_token:
         print("Обновление access token...")
         credentials.refresh(Request())
     
-    # Запуск ассистента с device_model_id
     last_check = time.time()
     with Assistant(credentials, device_model_id=DEVICE_MODEL_ID) as assistant:
         for event in assistant.start():
@@ -45,7 +49,6 @@ def start_assistant():
                         f.write(credentials.to_json())
                 last_check = current_time
             process_event(event)
-
 
 if __name__ == '__main__':
     start_assistant()

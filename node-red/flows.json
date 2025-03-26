@@ -1,0 +1,335 @@
+[
+    {
+        "id": "73170085d42a0281",
+        "type": "http in",
+        "z": "ad73bdad8cc955a0",
+        "name": "",
+        "url": "/assistant",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 440,
+        "y": 120,
+        "wires": [
+            [
+                "80912dbefdb8b36b",
+                "76df4dade2fc891e",
+                "ae05fd2b65d86ad2",
+                "0875d2b07f1a292e"
+            ]
+        ]
+    },
+    {
+        "id": "80912dbefdb8b36b",
+        "type": "switch",
+        "z": "ad73bdad8cc955a0",
+        "name": "Включить музыку",
+        "property": "payload.command",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "^(?:включи(ть)?\\s+)?(музыку|play music|трек|подкаст|стендап)\\s*",
+                "vt": "str",
+                "case": true
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 550,
+        "y": 260,
+        "wires": [
+            [
+                "5ef95c3071e4083f",
+                "76df4dade2fc891e"
+            ]
+        ]
+    },
+    {
+        "id": "5ef95c3071e4083f",
+        "type": "function",
+        "z": "ad73bdad8cc955a0",
+        "name": "Обработка хука включи музыку",
+        "func": "let command = msg.payload.command;\n\n// Регулярка для удаления командных слов\nconst regex = /^(?:включи(ть)?\\s+)?(музыку|play music|трек|подкаст|стендап)\\s*/i;\n\n// Удаляем командную часть\nlet searchQuery = command.replace(regex, \"\").trim();\n\n// Если запрос пустой, подставляем случайный стиль музыки или категорию\nif (!searchQuery) {\n    const randomGenres = [\"rock\", \"jazz\", \"lofi\", \"classical\", \"electronic\", \"hip-hop\", \"blues\"];\n    searchQuery = randomGenres[Math.floor(Math.random() * randomGenres.length)];\n}\n\nmsg.payload = `ytsearch1:${searchQuery}`;\nmsg.originalPayload = `ytsearch1:${searchQuery}`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 360,
+        "wires": [
+            [
+                "76df4dade2fc891e",
+                "d9df1868684e2ef5"
+            ]
+        ]
+    },
+    {
+        "id": "d86ed226bd859f09",
+        "type": "exec",
+        "z": "ad73bdad8cc955a0",
+        "command": "",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Загрузка",
+        "x": 1240,
+        "y": 660,
+        "wires": [
+            [
+                "76df4dade2fc891e"
+            ],
+            [
+                "090c067a9ef639e9",
+                "76df4dade2fc891e"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "090c067a9ef639e9",
+        "type": "exec",
+        "z": "ad73bdad8cc955a0",
+        "command": "pkill mpg123; mpg123",
+        "addpay": "filePath",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Воспроизведение",
+        "x": 1310,
+        "y": 800,
+        "wires": [
+            [],
+            [
+                "76df4dade2fc891e"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "76df4dade2fc891e",
+        "type": "debug",
+        "z": "ad73bdad8cc955a0",
+        "name": "Отладка",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 970,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "ae05fd2b65d86ad2",
+        "type": "switch",
+        "z": "ad73bdad8cc955a0",
+        "name": "Выключить музыку",
+        "property": "payload.command",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "выключи музыку",
+                "vt": "str",
+                "case": true
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 190,
+        "y": 260,
+        "wires": [
+            [
+                "1f166586193f4068",
+                "76df4dade2fc891e"
+            ]
+        ]
+    },
+    {
+        "id": "1f166586193f4068",
+        "type": "exec",
+        "z": "ad73bdad8cc955a0",
+        "command": "killall mpg123; rm -f /tmp/music*",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Остановка воспроизведения",
+        "x": 210,
+        "y": 340,
+        "wires": [
+            [],
+            [
+                "76df4dade2fc891e"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "0875d2b07f1a292e",
+        "type": "http response",
+        "z": "ad73bdad8cc955a0",
+        "name": "Принята команда",
+        "statusCode": "200",
+        "headers": {},
+        "x": 790,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "d9df1868684e2ef5",
+        "type": "function",
+        "z": "ad73bdad8cc955a0",
+        "name": "Initialize Filename",
+        "func": "msg.basePath = \"/tmp\";\nmsg.baseName = \"music\";\nmsg.extension = \".mp3\";\nmsg.counter = 0;\nmsg.filePath = `${msg.basePath}/${msg.baseName}${msg.extension}`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 520,
+        "wires": [
+            [
+                "76df4dade2fc891e",
+                "9cc430f8a112c243"
+            ]
+        ]
+    },
+    {
+        "id": "51855565b16a0a28",
+        "type": "exec",
+        "z": "ad73bdad8cc955a0",
+        "command": "test -f",
+        "addpay": "filePath",
+        "append": "&& echo \"exists\" || echo \"not_exists\"",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Check File Exists",
+        "x": 290,
+        "y": 660,
+        "wires": [
+            [
+                "2403ef764707f9e9"
+            ],
+            [
+                "76df4dade2fc891e"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "2403ef764707f9e9",
+        "type": "switch",
+        "z": "ad73bdad8cc955a0",
+        "name": "File Exists?",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "^exists",
+                "vt": "str",
+                "case": true
+            },
+            {
+                "t": "regex",
+                "v": "^not_exists",
+                "vt": "str",
+                "case": true
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 290,
+        "y": 740,
+        "wires": [
+            [
+                "7208f3c81754cbde",
+                "76df4dade2fc891e"
+            ],
+            [
+                "5b8827a4b00e5c24"
+            ]
+        ]
+    },
+    {
+        "id": "7208f3c81754cbde",
+        "type": "function",
+        "z": "ad73bdad8cc955a0",
+        "name": "Increment Counter",
+        "func": "msg.counter++;\nmsg.filePath = `${msg.basePath}/${msg.baseName}_${msg.counter}${msg.extension}`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 800,
+        "wires": [
+            [
+                "76df4dade2fc891e",
+                "9cc430f8a112c243"
+            ]
+        ]
+    },
+    {
+        "id": "9cc430f8a112c243",
+        "type": "template",
+        "z": "ad73bdad8cc955a0",
+        "name": "Prepare Test Command",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "test -f {{{filePath}}} && echo exists || echo not_exists",
+        "output": "str",
+        "x": 310,
+        "y": 580,
+        "wires": [
+            [
+                "51855565b16a0a28"
+            ]
+        ]
+    },
+    {
+        "id": "5b8827a4b00e5c24",
+        "type": "template",
+        "z": "ad73bdad8cc955a0",
+        "name": "Формирование команды",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "yt-dlp -o {{{filePath}}} -x --audio-format mp3 --no-playlist --max-downloads 1 --match-filter \"duration <= 1200\" {{originalPayload}}",
+        "output": "str",
+        "x": 730,
+        "y": 740,
+        "wires": [
+            [
+                "d86ed226bd859f09",
+                "76df4dade2fc891e"
+            ]
+        ]
+    }
+]

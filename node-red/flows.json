@@ -1,5 +1,13 @@
 [
     {
+        "id": "ad73bdad8cc955a0",
+        "type": "tab",
+        "label": "Поток 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "73170085d42a0281",
         "type": "http in",
         "z": "ad73bdad8cc955a0",
@@ -51,7 +59,7 @@
         "type": "function",
         "z": "ad73bdad8cc955a0",
         "name": "Обработка хука включи музыку",
-        "func": "let command = msg.payload.command;\n\n// Регулярка для удаления командных слов\nconst regex = /^(?:включи(ть)?\\s+)?(музыку|play music|трек|подкаст|стендап)\\s*/i;\n\n// Удаляем командную часть\nlet searchQuery = command.replace(regex, \"\").trim();\n\n// Если запрос пустой, подставляем случайный стиль музыки или категорию\nif (!searchQuery) {\n    const randomGenres = [\"rock\", \"jazz\", \"lofi\", \"classical\", \"electronic\", \"hip-hop\", \"blues\"];\n    searchQuery = randomGenres[Math.floor(Math.random() * randomGenres.length)];\n}\n\nmsg.payload = `ytsearch1:${searchQuery}`;\nmsg.originalPayload = `ytsearch1:${searchQuery}`;\n\nreturn msg;",
+        "func": "let command = msg.payload.command;\n\n// Регулярка для удаления командных слов\nconst regex = /^(?:включи(ть)?\\s+)?(музыку|play music|трек|подкаст|стендап)\\s*/i;\n\n// Удаляем командную часть\nlet searchQuery = command.replace(regex, \"\").trim();\n\n// Если запрос пустой, подставляем случайный стиль музыки или категорию\nif (!searchQuery) {\n    const randomGenres = [\"rock\", \"jazz\", \"lofi\", \"electronic\", \"hip-hop\", \"blues\"];\n    searchQuery = `${randomGenres[Math.floor(Math.random() * randomGenres.length)]} track`;\n}\n\nmsg.payload = `ytsearch1:${searchQuery}`;\nmsg.originalPayload = `ytsearch1:${searchQuery}`;\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -321,7 +329,7 @@
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "yt-dlp -o {{{filePath}}} -x --audio-format mp3 --no-playlist --max-downloads 1 --match-filter \"duration <= 1200\" {{originalPayload}}",
+        "template": "yt-dlp -o {{{filePath}}} -x --audio-format mp3 --no-playlist --max-downloads 1 --match-filter \"duration <= 1200\" \"{{originalPayload}}\"",
         "output": "str",
         "x": 730,
         "y": 740,

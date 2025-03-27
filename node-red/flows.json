@@ -23,7 +23,8 @@
                 "80912dbefdb8b36b",
                 "76df4dade2fc891e",
                 "ae05fd2b65d86ad2",
-                "0875d2b07f1a292e"
+                "0875d2b07f1a292e",
+                "73feb93123fd5ff0"
             ]
         ]
     },
@@ -149,7 +150,7 @@
         "rules": [
             {
                 "t": "regex",
-                "v": "выключи музыку",
+                "v": "(выключи(ть)? музыку|выключи(ть)? радио)",
                 "vt": "str",
                 "case": true
             }
@@ -195,8 +196,8 @@
         "name": "Принята команда",
         "statusCode": "200",
         "headers": {},
-        "x": 790,
-        "y": 140,
+        "x": 870,
+        "y": 100,
         "wires": []
     },
     {
@@ -338,6 +339,97 @@
                 "d86ed226bd859f09",
                 "76df4dade2fc891e"
             ]
+        ]
+    },
+    {
+        "id": "73feb93123fd5ff0",
+        "type": "switch",
+        "z": "ad73bdad8cc955a0",
+        "name": "Включить радио",
+        "property": "payload.command",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "(включи(ть)? радио|turn on radio)\\s*(\\d+|.+)?",
+                "vt": "str",
+                "case": true
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 810,
+        "y": 220,
+        "wires": [
+            [
+                "8fe38e1f48694b57"
+            ]
+        ]
+    },
+    {
+        "id": "8fe38e1f48694b57",
+        "type": "function",
+        "z": "ad73bdad8cc955a0",
+        "name": "Список радио",
+        "func": "msg.stations = {\n    \"НАШЕ РАДИО\": \"http://nashe1.hostingradio.ru/nashe-128.mp3\",\n    \"RADIO Культура Rock\": \"http://icecast.vgtrk.cdnvideo.ru/kulturafm_mp3_192kbps\",\n    \"RADIO Шансон Rock\": \"http://chanson.hostingradio.ru:8041/chanson256.mp3\",\n    \"RADIO РОссии Rock\": \"http://icecast.vgtrk.cdnvideo.ru/rrzonam_mp3_192kbps\",\n    \"Radio Revolution\": \"http://revolutionradio.ru:8000/live.mp3\",\n    \"Radio ChiplDuk\": \"http://radio.4duk.ru/4duk128.mp3\",\n    \"Veda Radio\": \"http://listen.vedaradio.fm:8000/high?1458508335793.mp3\",\n    \"Radio 107 Krasnodar 107.7 FM\": \"http://62.183.34.109:8000/radio107_256.mp3\",\n    \"Kunel Radio\": \"http://live.kunelradio.ru:8000/128.mp3\",\n    \"Rock FM  Mocow 95.2\": \"http://nashe1.hostingradio.ru/rock-128.mp3\",\n    \"Radio Express\": \"http://159.253.18.97:8000/128kbit.mp3\",\n    \"L-Radio Chelyabinsk 104.9 FM\": \"http://96mp3.lradio.ru:8000/lradio.stereo.96.mp3\",\n    \"Militseyskaya Volna\": \"http://radio.mvd.ru:8000/mv128.mp3\",\n    \"101.ru - Радио ИСКАТЕЛЬ\": \"http://iskatel.hostingradio.ru:8015/iskatel-128.mp3\",\n    \"RUSRadio\": \"http://radio.city.kg:8000/rusradio.mp3\",\n    \"Retro FM -  80s\": \"http://retro80.hostingradio.ru:8025/retro80-128.mp3\",\n    \"Retro FM - 70s\": \"http://retro70.hostingradio.ru:8025/retro70-128.mp3\",\n    \"Retro FM - 90s\": \"http://retro90.hostingradio.ru:8025/retro90-128.mp3\",\n    \"Radio Rossii Kabardino-Balkaria 70.52 FM\": \"http://31.41.56.29:8000/radio.mp3\",\n    \"Avtoradio Omsk 106.8 FM\": \"http://www.omskfm.ru:8000/1068-128.mp3\",\n    \"Radio Shanson MSK\": \"http://chanson.hostingradio.ru:8041/chanson128.mp3\",\n    \"Radio GovoritMoskva 94.8 FM\": \"http://video.govoritmoskva.ru:8000/rufm_m.mp3\",\n    \"Radio Europa Plus Perm 89.4 FM\": \"http://emgregion.hostingradio.ru:8064/perm.europaplus.mp3\",\n    \"RockMix Radio\": \"http://cabhs33.sonixcast.com:9272/stream/1/?cb=521609.mp3\",\n    \"Radio Europa Plus - ResiDance\": \"http://emg02.hostingradio.ru/ep-residance128.mp3\",\n    \"Radio Europa Plus - New\": \"http://emg02.hostingradio.ru/ep-new128.mp3\",\n    \"Radio Europa Plus - Light\": \"http://emg02.hostingradio.ru/ep-light128.mp3\",\n    \"Radio Europa Plus - Party\": \"http://epdop.hostingradio.ru:8033/epparty128.mp3\",\n    \"Radio Europa Plus - Acoustic\": \"http://epdop.hostingradio.ru:8033/acoustic128.mp3\",\n    \"Radio Europa Plus Moscow 106.2 FM\": \"http://ep64server.streamr.ru:8033/europaplus64.mp3\",\n    \"Radio Europa Plus SPB 100.5 FM\": \"http://emgspb.hostingradio.ru/europaplusspb128.mp3\",\n    \"Radio Silver Rain Moscow 100.1 FM\": \"http://213.59.4.27:8000/silver128.mp3\",\n    \"Radio Nashe FM 2.0\": \"http://nashe1.hostingradio.ru/nashe20-128.mp3\",\n    \"Radio Nahe FM SPB 104.0\": \"http://nashe1.hostingradio.ru/nashespb128.mp3\",\n    \"Radio Mariya FM Kirov 102.9 MHZ\": \"http://mariafm.ru:8000/maria-fm.mp3\",\n    \"Radio Dorognoe Dance in Russian\": \"http://dor2server.streamr.ru:8000/dorognoe1945.mp3\",\n    \"Radio Best FM Moscow 100.5\": \"http://best.streamr.ru/best-128.mp3\",\n    \"Radio Jazz FM 89.1\": \"http://jazz.streamr.ru/jazz-128.mp3\",\n    \"Radio Jazz FM - Jazz Vocals\": \"http://cfm.jazzandclassic.ru:14534/jvstream.mp3\",\n    \"Radio Jazz FM - Smooth Jazz\": \"http://cfm.jazzandclassic.ru:14534/sjstream.mp3\",\n    \"Radio Classic FM 100.9\": \"http://jfm1.hostingradio.ru:14536/rcstream.mp3\",\n    \"Radio Jazz FM - Jazz Legends\": \"http://cfm.jazzandclassic.ru:14534/jlstream.mp3\",\n    \"Radio Jazz FM - Classic Jazz\": \"http://cfm.jazzandclassic.ru:14534/ijstream.mp3\",\n    \"Radio Alania FM Vladikavkaz 104.5\": \"http://vgtrk15.hostingradio.ru:8011/vgtrk15128.mp3\",\n    \"Radio Iskatel\": \"http://iskatel.hostingradio.ru:8015/iskatel-128.mp3\",\n    \"Radio Miliczejskaya Volna Barnaul 107.8 FM\": \"http://radio.mvd.ru:8000/mv128.mp3\",\n    \"Radio Bereg Narratives Moscow\": \"http://radio-tochka.com:6180/;stream.mp3\",\n    \"Radio Bereg Gospel Moscow\": \"http://radio-tochka.com:6095/;stream.mp3\",\n    \"Literary radio\": \"http://79.137.234.183:8000/;stream.mp3\",\n    \"Radio Podsolnuh 102.9 FM\": \"http://live.podsolnuh.media:8000/radio#.mp3\",\n    \"Dance Wave!\": \"http://dancewave.online/dance.mp3\",\n    \"Dance Wave Retro!\": \"http://retro.dancewave.online/retrodance.mp3\",\n    \"Radio Svoe\": \"http://svoeradiofm.hostingradio.ru:8032/svoe-128.mp3\",\n    \"Radio Komsomolskaya Pravda Barnaul 106.8 FM\": \"http://kpradio.hostingradio.ru:8000/barnaul.radiokp128.mp3\",\n    \"Radio Litradio\": \"http://79.137.234.183:8000/;stream.mp3\",\n    \"Radio Miliceyskaya volna Novokuznetsk\": \"http://radio.mvd.ru:8000/mv128.mp3\",\n    \"Кекс FM 89.9\": \"http://nashe1.hostingradio.ru/nashe-128.mp3\",\n    \"«Юлдаш» радиоһы\": \"http://radio.mediacdn.ru/uldash.mp3\",\n    \"Radio Sputnik Ufo 107.0 FM\": \"http://radio.mediacdn.ru/sputnik_fm.mp3\",\n    \"Radiokrylya\": \"https://myradio24.org/rkradio_320.mp3\",\n    \"«Ашҡаҙар» - МОҢЛО РАДИО\": \"http://radio.mediacdn.ru/ashkadar.mp3\",\n    \"Radio Orpheus 99.2 FM\": \"http://orfeyfm.hostingradio.ru:8034/orfeyfm128.mp3\",\n    \"Ashkadar fm\": \"http://radio.mediacdn.ru/ashkadar.mp3\",\n    \"Радио Кавказ Хит 105.9 FM\": \"http://kavkazhit.hostingradio.ru:8017/kavkazhit96.mp3\"\n};\nmsg.defaultStation = \"НАШЕ РАДИО\";\nmsg.defaultStationUrl = msg.stations[msg.defaultStation];\nmsg.command = msg.payload.command;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 220,
+        "wires": [
+            [
+                "21b8b6c2f2c82ed3"
+            ]
+        ]
+    },
+    {
+        "id": "21b8b6c2f2c82ed3",
+        "type": "function",
+        "z": "ad73bdad8cc955a0",
+        "name": "Поиск радиостанции",
+        "func": "let command = msg.command.toLowerCase();\nlet regex = /^(включи(ть)? радио|turn on radio)\\s*(\\d+|.+)?$/i;\nlet match = command.match(regex);\n\nif (match) {\n    let stationIdentifier = match[3] ? match[3].trim() : \"\";\n    let stationUrl = msg.defaultStationUrl;\n\n    console.log(stationIdentifier, parseInt(stationIdentifier), !isNaN(parseInt(stationIdentifier)))\n    if (stationIdentifier) {\n        if (!isNaN(parseInt(stationIdentifier))) {\n            // Если stationIdentifier - число, выбираем станцию по номеру\n            let stationIndex = parseInt(stationIdentifier, 10) - 1;\n            let stationKeys = Object.keys(msg.stations);\n            if (stationIndex >= 0 && stationIndex < stationKeys.length) {\n                let stationName = stationKeys[stationIndex];\n                stationUrl = msg.stations[stationName];\n            }\n            console.log(stationUrl)\n        } else {\n            // Если stationIdentifier - текст, выбираем станцию по названию\n            let lowerIdentifier = stationIdentifier.toLowerCase();\n            for (let [name, url] of Object.entries(msg.stations)) {\n                if (name.toLowerCase() === lowerIdentifier) {\n                    stationUrl = url;\n                    break;\n                }\n            }\n        }\n    }\n\n    msg.stationUrl = stationUrl;\n    global.set(\"currentPlayback\", \"radio\");\n    return msg;\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1300,
+        "y": 220,
+        "wires": [
+            [
+                "76df4dade2fc891e",
+                "96751c439bf1f21b"
+            ]
+        ]
+    },
+    {
+        "id": "96751c439bf1f21b",
+        "type": "exec",
+        "z": "ad73bdad8cc955a0",
+        "command": "pkill mpg123; mpg123",
+        "addpay": "stationUrl",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Проигрывание радио",
+        "x": 1520,
+        "y": 320,
+        "wires": [
+            [
+                "76df4dade2fc891e"
+            ],
+            [
+                "76df4dade2fc891e"
+            ],
+            []
         ]
     }
 ]

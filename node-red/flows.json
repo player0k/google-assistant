@@ -23,8 +23,9 @@
                 "80912dbefdb8b36b",
                 "76df4dade2fc891e",
                 "ae05fd2b65d86ad2",
-                "0875d2b07f1a292e",
-                "73feb93123fd5ff0"
+                "73feb93123fd5ff0",
+                "6301da4cc523b419",
+                "230ee5ccb822defa"
             ]
         ]
     },
@@ -190,17 +191,6 @@
         ]
     },
     {
-        "id": "0875d2b07f1a292e",
-        "type": "http response",
-        "z": "ad73bdad8cc955a0",
-        "name": "Принята команда",
-        "statusCode": "200",
-        "headers": {},
-        "x": 870,
-        "y": 100,
-        "wires": []
-    },
-    {
         "id": "d9df1868684e2ef5",
         "type": "function",
         "z": "ad73bdad8cc955a0",
@@ -359,7 +349,7 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 810,
+        "x": 850,
         "y": 220,
         "wires": [
             [
@@ -431,5 +421,59 @@
             ],
             []
         ]
+    },
+    {
+        "id": "230ee5ccb822defa",
+        "type": "function",
+        "z": "ad73bdad8cc955a0",
+        "name": "Громкость",
+        "func": "let command = msg.payload.command.toLowerCase();\nif (/сделай (радио|музыку) тише/i.test(command)) {\n    msg.volumeCommand = \"amixer set Master 10%-\";\n}\nif (command.includes(\"всю громкость\") || command.includes(\"на всю мощь\") || command.includes(\"максимальную громкость\")) {\n    msg.volumeCommand = \"amixer set Master 100%\";\n}\nif (/сделай (радио|музыку) громче/i.test(command)) {\n    msg.volumeCommand = \"amixer set Master 10%+\";\n}\nif (command.includes(\"выключи звук\") || command.includes(\"тихо\")) {\n    msg.volumeCommand = \"amixer set Master 0%\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 120,
+        "wires": [
+            [
+                "cd56db34d1085f70",
+                "76df4dade2fc891e"
+            ]
+        ]
+    },
+    {
+        "id": "cd56db34d1085f70",
+        "type": "exec",
+        "z": "ad73bdad8cc955a0",
+        "command": "",
+        "addpay": "volumeCommand",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Изменение громкости",
+        "x": 1060,
+        "y": 120,
+        "wires": [
+            [
+                "76df4dade2fc891e"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "6301da4cc523b419",
+        "type": "http response",
+        "z": "ad73bdad8cc955a0",
+        "name": "Ответ Google-Assistant",
+        "statusCode": "200",
+        "headers": {},
+        "x": 610,
+        "y": 40,
+        "wires": []
     }
 ]

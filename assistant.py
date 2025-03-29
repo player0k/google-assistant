@@ -31,10 +31,10 @@ def process_event(event):
 
 def start_assistant():
     with open(CREDENTIALS_PATH, 'r') as f:
-        credentials = Credentials(token=None, **json.load(f))
+        credentials = Credentials(**json.load(f))
     
-    if credentials.expired and credentials.refresh_token:
-        print("Обновление access token...")
+#    if credentials.expired and credentials.refresh_token:
+#        print("Обновление access token...")
         credentials.refresh(Request())
     
     last_check = time.time()
